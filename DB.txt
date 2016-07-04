@@ -1,0 +1,226 @@
+
+CREATE TABLE T_Benefit
+(
+	Ben_Name             VARCHAR2(250) NULL ,
+	Ben_Address          VARCHAR2(500) NULL ,
+	Ben_Phone            NUMBER(10) NULL ,
+	Ben_citizen          NUMBER(13) NOT NULL,
+  Ben_type              VARCHAR2(250) NULL
+);
+ALTER TABLE T_Benefit
+	ADD CONSTRAINT  PKT_Benefit PRIMARY KEY (Ben_citizen);
+
+CREATE TABLE T_Employee
+(
+	Emp_Id               NUMBER(2) NOT NULL ,
+	Emp_User             VARCHAR2(12) NULL ,
+	Emp_Pass             VARCHAR2(12) NULL ,
+	Emp_name             VARCHAR2(100) NULL ,
+	Emp_Address          VARCHAR2(150) NULL ,
+	Emp_Tel              NUMBER(10) NULL ,
+	Staus_add_ID         NUMBER(1) NOT NULL 
+);
+ALTER TABLE T_Employee
+	ADD CONSTRAINT  PKT_Employee PRIMARY KEY (Emp_Id);
+
+CREATE TABLE T_Death
+(
+	Death_id             NUMBER(5) NOT NULL ,
+	Death_Informer       VARCHAR2(250) NULL ,
+	Death_Certificate    VARCHAR2(20) NULL ,
+	Death_Cuase          VARCHAR2(150) NULL ,
+	Death_Date           DATE NULL ,
+	Death_DateNotifi     DATE NULL ,
+	Mem_Id               NUMBER(5) NOT NULL ,
+	Date_prepare         DATE NULL ,
+	Emp_Id               NUMBER(2) NOT NULL 
+);
+ALTER TABLE T_Death
+	ADD CONSTRAINT  PKT_Death PRIMARY KEY (Death_id);
+
+CREATE TABLE T_list
+(
+	Amount_Death         NUMBER(3) NULL ,
+	Amount_Money         NUMBER(4) NULL ,
+	YY_MM                NUMBER(4) NOT NULL 
+);
+ALTER TABLE T_list
+	ADD CONSTRAINT  PKT_list PRIMARY KEY (YY_MM);
+
+CREATE TABLE T_Member_status
+(
+	Member_status_id     NUMBER(1) NOT NULL ,
+	Member_status_name   VARCHAR2(50) NULL 
+);
+ALTER TABLE T_Member_status
+	ADD CONSTRAINT  PKT_Member_status PRIMARY KEY (Member_status_id);
+
+CREATE TABLE T_Status
+(
+	Status_ID            NUMBER(1) NOT NULL ,
+	Status_N             VARCHAR2(10) NULL 
+);
+ALTER TABLE T_Status
+	ADD CONSTRAINT  PKT_Status PRIMARY KEY (Status_ID);
+
+CREATE TABLE T_Member
+(
+	Mem_Id               NUMBER(5) NOT NULL ,
+	Mem_F_NAME           VARCHAR2(250) NULL ,
+	Mem_L_NAME           VARCHAR2(250) NULL ,
+	Mem_Date             DATE NULL ,
+	Mem_BD               DATE NULL ,
+	Mem_Age              NUMBER(3) NULL ,
+	Mem_Nation           VARCHAR2(100) NULL ,
+	Mem_Address          VARCHAR2(500) NULL ,
+	Mem_Tel              NUMBER(10) NULL ,
+	Mem_Worktel          VARCHAR2(20) NULL ,
+	Mem_Job              VARCHAR2(100) NULL ,
+	Mem_Citizen_Id       NUMBER(13) NULL ,
+	Status_ID            NUMBER(1) NOT NULL ,
+	Member_status_id     NUMBER(1) NOT NULL ,
+	Status_mem           NUMBER(1) NULL ,
+	Title_id             NUMBER(1) NOT NULL ,
+	Mem_spouse           VARCHAR2(500) NULL ,
+	type_id              NUMBER(1) NOT NULL 
+);
+ALTER TABLE T_Member
+	ADD CONSTRAINT  PKT_Member PRIMARY KEY (Mem_Id);
+
+CREATE TABLE T_Resign
+(
+	Re_ID                NUMBER(5) NOT NULL ,
+	Re_Cuase             VARCHAR2(100) NULL ,
+	Re_Date              DATE NULL ,
+	Mem_Id               NUMBER(5) NOT NULL ,
+	Emp_Id               NUMBER(1) NOT NULL 
+);
+ALTER TABLE T_Resign
+	ADD CONSTRAINT  PKT_Resign PRIMARY KEY (Re_ID);
+
+CREATE TABLE T_Recieve
+(
+	Rec_Amount           NUMBER(4) NULL ,
+	Rec_Date             DATE NULL ,
+	Mem_Id               NUMBER(5) NOT NULL ,
+	YY_MM                NUMBER(4) NOT NULL ,
+	Emp_Id               NUMBER(1) NOT NULL 
+);
+ALTER TABLE T_Recieve
+	ADD CONSTRAINT  PKT_Recieve PRIMARY KEY (Mem_Id,YY_MM);
+
+CREATE TABLE T_News
+(
+	News_ID              NUMBER(5) NOT NULL ,
+	News_Date            DATE NULL ,
+	News_Title           VARCHAR2(1500) NULL ,
+	News_deteil          VARCHAR2(2500) NULL 
+);
+ALTER TABLE T_News
+	ADD CONSTRAINT  PKT_News PRIMARY KEY (News_ID);
+
+CREATE TABLE T_relationship
+(
+	relation_id          NUMBER(5) NOT NULL ,
+	Mem_Id               NUMBER(5) NOT NULL ,
+	Ben_citizen          NUMBER(13) NOT NULL 
+);
+ALTER TABLE T_relationship
+	ADD CONSTRAINT  PKT_relationship PRIMARY KEY (relation_id);
+
+CREATE TABLE T_Payment
+(
+	Pay_Id               NUMBER(5) NOT NULL ,
+	Pay_Date             DATE NULL ,
+	Pay_Amount           NUMBER(7) NULL ,
+	Death_id             NUMBER(5) NOT NULL ,
+	relation_id          NUMBER(5) NOT NULL ,
+	Emp_Id               NUMBER(1) NOT NULL 
+);
+
+ALTER TABLE T_Payment
+	ADD CONSTRAINT  PKT_Payment PRIMARY KEY (Pay_Id);
+
+CREATE TABLE T_Status_add
+(
+	Staus_add_ID         NUMBER(1) NOT NULL ,
+	Staus_add_name       VARCHAR2(100) NULL 
+);
+ALTER TABLE T_Status_add
+	ADD CONSTRAINT  PKT_Status_add PRIMARY KEY (Staus_add_ID);
+
+CREATE TABLE T_Style
+(
+	T_Style_ID           NUMBER(1) NOT NULL ,
+	T_Style_name         VARCHAR2(100) NULL 
+);
+ALTER TABLE T_Style
+	ADD CONSTRAINT  PKT_Style PRIMARY KEY (T_Style_ID);
+
+CREATE TABLE T_Title
+(
+	Title_id             NUMBER(1) NOT NULL ,
+	Title_name           VARCHAR2(50) NULL 
+);
+ALTER TABLE T_Title
+	ADD CONSTRAINT  PKT_Title PRIMARY KEY (Title_id);
+
+CREATE TABLE T_type
+(
+	type_id              NUMBER(1) NOT NULL ,
+	type_name            VARCHAR2(100) NULL 
+);
+ALTER TABLE T_type
+	ADD CONSTRAINT  PKT_type PRIMARY KEY (type_id);
+
+ALTER TABLE T_Employee
+	ADD (CONSTRAINT T_Employee_T_Status_add FOREIGN KEY (Staus_add_ID) REFERENCES T_Status_add (Staus_add_ID));
+
+ALTER TABLE T_Death
+	ADD (CONSTRAINT T_Death_T_Employee FOREIGN KEY (Emp_Id) REFERENCES T_Employee (Emp_Id));
+
+ALTER TABLE T_Death
+	ADD (CONSTRAINT T_Death_T_Member FOREIGN KEY (Mem_Id) REFERENCES T_Member (Mem_Id));
+
+ALTER TABLE T_Member
+	ADD (CONSTRAINT T_Member_T_Status FOREIGN KEY (Status_ID) REFERENCES T_Status (Status_ID));
+
+ALTER TABLE T_Member
+	ADD (CONSTRAINT T_Member_T_Member_status FOREIGN KEY (Member_status_id) REFERENCES T_Member_status (Member_status_id));
+
+ALTER TABLE T_Member
+	ADD (CONSTRAINT T_Member_T_Title FOREIGN KEY (Title_id) REFERENCES T_Title (Title_id));
+
+ALTER TABLE T_Member
+	ADD (CONSTRAINT T_Member_T_type FOREIGN KEY (type_id) REFERENCES T_type (type_id));
+
+ALTER TABLE T_Resign
+	ADD (CONSTRAINT T_Resign_T_Employee FOREIGN KEY (Emp_Id) REFERENCES T_Employee (Emp_Id));
+
+ALTER TABLE T_Resign
+	ADD (CONSTRAINT T_Resign_T_Member FOREIGN KEY (Mem_Id) REFERENCES T_Member (Mem_Id));
+
+ALTER TABLE T_Recieve
+	ADD (CONSTRAINT T_Recieve_T_Employee FOREIGN KEY (Emp_Id) REFERENCES T_Employee (Emp_Id));
+
+ALTER TABLE T_Recieve
+	ADD (CONSTRAINT T_Recieve_T_Member FOREIGN KEY (Mem_Id) REFERENCES T_Member (Mem_Id));
+
+ALTER TABLE T_Recieve
+	ADD (CONSTRAINT T_Recieve_T_list FOREIGN KEY (YY_MM) REFERENCES T_list (YY_MM));
+
+ALTER TABLE T_relationship
+	ADD (CONSTRAINT T_relationship_T_Member FOREIGN KEY (Mem_Id) REFERENCES T_Member (Mem_Id));
+
+ALTER TABLE T_relationship
+	ADD (CONSTRAINT T_relationship_T_Benefit FOREIGN KEY (Ben_citizen) REFERENCES T_Benefit (Ben_citizen));
+
+ALTER TABLE T_Payment
+	ADD (CONSTRAINT T_Payment_T_Employee FOREIGN KEY (Emp_Id) REFERENCES T_Employee (Emp_Id));
+
+ALTER TABLE T_Payment
+	ADD (CONSTRAINT T_Payment_T_Death FOREIGN KEY (Death_id) REFERENCES T_Death (Death_id));
+
+ALTER TABLE T_Payment
+	ADD (CONSTRAINT T_Payment_T_relationship FOREIGN KEY (relation_id) REFERENCES T_relationship (relation_id));
+
